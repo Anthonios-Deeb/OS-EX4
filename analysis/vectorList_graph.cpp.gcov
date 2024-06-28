@@ -1,0 +1,206 @@
+        -:    0:Source:vectorList_graph.cpp
+        -:    1:#include "vectorList_graph.hpp"
+        -:    2:
+        -:    3:
+    #####:    4:Graph::Graph(int n, int m, vector<list<int>> &edges)
+        -:    5:{
+    #####:    6:    if (m != (int)edges.size())
+        -:    7:    {
+    #####:    8:        cout << m << " " << edges.size() << endl;
+        -:    9:        cout << "Invalid input. The number of edges does not match the input." << endl;
+        -:   10:        return;
+        -:   11:    }
+        -:   12:
+    #####:   13:    graph.resize(n + 1);
+    #####:   14:    for (size_t i = 0; i < edges.size(); i++)
+        -:   15:    {
+    #####:   16:        graph[edges[i].front()].push_back(edges[i].back());
+    #####:   17:        graph[edges[i].back()].push_back(edges[i].front());
+        -:   18:    }
+    #####:   19:    this->edgeList = getEdgeList();
+    #####:   20:    eulerGraph = graph;
+    =====:   21:}
+        -:   22:
+        1:   23:Graph::Graph(int n, int m, unsigned int seed)
+        -:   24:{
+        1:   25:    graph.resize(n + 1);
+        1:   26:    srand(seed);
+       40:   27:    for (int i = 0; i < m; i++)
+        -:   28:    {
+       39:   29:        int u = rand() % n + 1;
+       39:   30:        int v = rand() % n + 1;
+       39:   31:        if(!addEdge(u, v)){
+       29:   32:            i--;
+        -:   33:        }
+        -:   34:    }
+        1:   35:    eulerGraph = graph;
+        1:   36:}
+        -:   37:
+       10:   38:vector<list<int>> Graph::getEdgeList()
+        -:   39:{
+        -:   40:    vector<list<int>> ans;
+       70:   41:    for (size_t i = 0; i < this->graph.size(); i++)
+        -:   42:    {
+      170:   43:        for (auto x : this->graph[i])
+        -:   44:        {
+        -:   45:            list<int> temp;
+      110:   46:            temp.push_back(i);
+        -:   47:            temp.push_back(x);
+      110:   48:            ans.push_back(temp);
+        -:   49:        }
+        -:   50:    }
+       10:   51:    return ans;
+    =====:   52:}
+        -:   53:
+        1:   54:void Graph::printGraph()
+        -:   55:{
+        6:   56:    for (size_t i = 1; i < graph.size(); i++)
+        -:   57:    {
+        5:   58:        cout << "Vertex " << i << ": ";
+       25:   59:        for (auto it = graph[i].begin(); it != graph[i].end(); it++)
+        -:   60:        {
+       20:   61:            cout << *it << " ";
+        -:   62:        }
+        -:   63:        cout << endl;
+        -:   64:    }
+        1:   65:}
+        -:   66:
+    #####:   67:void Graph::printEdgeList()
+        -:   68:{
+    #####:   69:    for (size_t i = 0; i < edgeList.size(); i++)
+        -:   70:    {
+    #####:   71:        cout << "Edge " << i + 1 << ": ";
+    #####:   72:        for (auto it = edgeList[i].begin(); it != edgeList[i].end(); it++)
+        -:   73:        {
+    #####:   74:            cout << *it << " ";
+        -:   75:        }
+        -:   76:        cout << endl;
+        -:   77:    }
+    #####:   78:}
+        -:   79:
+       39:   80:bool Graph::addEdge(int u, int v)
+        -:   81:{
+       39:   82:    if (u <= 0 || v <= 0 || u > (int)(this->graph.size() - 1) || v > (int)(this->graph.size() - 1) || u == v)
+        -:   83:    {
+        -:   84:        cout << "Invalid input. Out of bounds." << endl;
+       14:   85:        return false;
+        -:   86:    }
+        -:   87:
+       25:   88:    auto itv = find(graph[u].begin(), graph[u].end(), v);
+       25:   89:    auto itu = find(graph[v].begin(), graph[v].end(), u);
+       25:   90:    if (itv == graph[u].end() && itu == graph[v].end())
+        -:   91:    {
+        -:   92:        graph[u].push_back(v);
+       10:   93:        graph[v].push_back(u);
+        -:   94:    }
+        -:   95:    else
+        -:   96:    {
+        -:   97:        cout << "Invalid input. The edge already exists." << endl;
+       15:   98:        return false;
+        -:   99:    }
+        -:  100:
+       10:  101:    this->edgeList = getEdgeList();
+        -:  102:
+       10:  103:    return true;
+        -:  104:}
+        -:  105:
+    #####:  106:bool Graph::removeEdge(int u, int v)
+        -:  107:{
+    #####:  108:    if (u <= 0 || v <= 0 || u > (int)(this->graph.size() - 1) || v > (int)(this->graph.size() - 1) || u == v)
+        -:  109:    {
+        -:  110:        cout << "Invalid input. Out of bounds." << endl;
+    #####:  111:        return false;
+        -:  112:    }
+        -:  113:
+    #####:  114:    auto itv = find(graph[u].begin(), graph[u].end(), v);
+    #####:  115:    auto itu = find(graph[v].begin(), graph[v].end(), u);
+    #####:  116:    if (itv != graph[u].end() && itu != graph[v].end())
+        -:  117:    {
+        -:  118:        graph[u].erase(itv);
+        -:  119:        graph[v].erase(itu);
+        -:  120:    }
+        -:  121:    else
+        -:  122:    {
+        -:  123:        cout << "Invalid input. The edge does not exist." << endl;
+    #####:  124:        return false;
+        -:  125:    }
+        -:  126:
+    #####:  127:    this->edgeList = getEdgeList();
+    #####:  128:    return true;
+        -:  129:}
+        -:  130:
+    #####:  131:vector<list<int>> Graph::getGraph()
+        -:  132:{
+    #####:  133:    return this->graph;
+        -:  134:}
+        -:  135:
+        5:  136:void Graph::DFSUtil(int v, vector<bool> &visited)
+        -:  137:{
+        -:  138:    // Mark the current node as visited and print it
+        5:  139:    visited[v] = true;
+        -:  140:
+        -:  141:    // Recur for all the vertices adjacent to this vertex
+        -:  142:    list<int>::iterator i;
+       25:  143:    for (i = eulerGraph[v].begin(); i != eulerGraph[v].end(); ++i)
+       20:  144:        if (!visited[*i])
+        4:  145:            DFSUtil(*i, visited);
+        5:  146:}
+        -:  147:
+        1:  148:bool Graph::isConnected()
+        -:  149:{
+        1:  150:    int size = eulerGraph.size();
+        -:  151:    // Mark all the vertices as not visited
+        1:  152:    vector<bool> visited(size, false);
+        -:  153:    int i;
+        7:  154:    for (i = 0; i < size; i++)
+        -:  155:        visited[i] = false;
+        -:  156:
+        -:  157:    // Find a vertex with non-zero degree
+        2:  158:    for (i = 0; i < size; i++)
+        2:  159:        if (eulerGraph[i].size() != 0)
+        -:  160:            break;
+        -:  161:
+        -:  162:    // If there are no edges in the graph, return true
+        1:  163:    if (i == size)
+        -:  164:        return true;
+        -:  165:
+        -:  166:    // Start DFS traversal from a vertex with non-zero degree
+        1:  167:    DFSUtil(i, visited);
+        -:  168:
+        -:  169:    // Check if all non-zero degree vertices are visited
+        7:  170:    for (i = 0; i < size; i++)
+        6:  171:        if (visited[i] == false && eulerGraph[i].size() > 0)
+        -:  172:            return false;
+        -:  173:
+        -:  174:    return true;
+        -:  175:}
+        -:  176:
+        -:  177:/* The function returns one of the following values
+        -:  178:    0 --> If graph is not Eulerian
+        -:  179:    1 --> If graph has an Euler path (Semi-Eulerian)
+        -:  180:    2 --> If graph has an Euler Circuit (Eulerian)  */
+        1:  181:int Graph::isEulerian()
+        -:  182:{
+        1:  183:    int size = eulerGraph.size();
+        -:  184:    // Check if all non-zero degree vertices are connected
+        1:  185:    if (isConnected() == false)
+        -:  186:        return 0;
+        -:  187:
+        -:  188:    // Count vertices with odd degree
+        -:  189:    int odd = 0;
+        7:  190:    for (int i = 0; i < size; i++){
+        6:  191:        if (eulerGraph[i].size() % 2 == 1)
+        -:  192:        {   
+    #####:  193:            odd++;
+        -:  194:        }
+        -:  195:    }
+        -:  196:
+        -:  197:    // If count is more than 2, then graph is not Eulerian
+        1:  198:    if (odd > 2)
+        -:  199:        return 0;
+        -:  200:
+        -:  201:    // If odd count is 2, then semi-eulerian.
+        -:  202:    // If odd count is 0, then eulerian
+        -:  203:    // Note that odd count can never be 1 for undirected graph
+        1:  204:    return (odd) ? 1 : 2;
+        -:  205:}
