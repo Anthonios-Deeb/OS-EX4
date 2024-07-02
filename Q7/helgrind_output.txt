@@ -1,0 +1,63 @@
+==145593== Helgrind, a thread error detector
+==145593== Copyright (C) 2007-2017, and GNU GPL'd, by OpenWorks LLP et al.
+==145593== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==145593== Command: ./race
+==145593== 
+==145593== ---Thread-Announcement------------------------------------------
+==145593== 
+==145593== Thread #4 was created
+==145593==    at 0x4985EB7: clone (clone.S:62)
+==145593==    by 0x491D1EB: create_thread (pthread_create.c:295)
+==145593==    by 0x491DC0F: pthread_create@@GLIBC_2.34 (pthread_create.c:828)
+==145593==    by 0x486F24B: ??? (in /usr/libexec/valgrind/vgpreload_helgrind-arm64-linux.so)
+==145593==    by 0x108A33: main (in /home/anthonios/Desktop/OS-EX4/Q7/race)
+==145593== 
+==145593== ---Thread-Announcement------------------------------------------
+==145593== 
+==145593== Thread #3 was created
+==145593==    at 0x4985EB7: clone (clone.S:62)
+==145593==    by 0x491D1EB: create_thread (pthread_create.c:295)
+==145593==    by 0x491DC0F: pthread_create@@GLIBC_2.34 (pthread_create.c:828)
+==145593==    by 0x486F24B: ??? (in /usr/libexec/valgrind/vgpreload_helgrind-arm64-linux.so)
+==145593==    by 0x108A33: main (in /home/anthonios/Desktop/OS-EX4/Q7/race)
+==145593== 
+==145593== ----------------------------------------------------------------
+==145593== 
+==145593== Possible data race during read of size 8 at 0x119018 by thread #4
+==145593== Locks held: none
+==145593==    at 0x108980: square (in /home/anthonios/Desktop/OS-EX4/Q7/race)
+==145593==    by 0x486F41B: ??? (in /usr/libexec/valgrind/vgpreload_helgrind-arm64-linux.so)
+==145593==    by 0x491D5C7: start_thread (pthread_create.c:442)
+==145593==    by 0x4985EDB: thread_start (clone.S:79)
+==145593== 
+==145593== This conflicts with a previous write of size 8 by thread #3
+==145593== Locks held: none
+==145593==    at 0x108990: square (in /home/anthonios/Desktop/OS-EX4/Q7/race)
+==145593==    by 0x486F41B: ??? (in /usr/libexec/valgrind/vgpreload_helgrind-arm64-linux.so)
+==145593==    by 0x491D5C7: start_thread (pthread_create.c:442)
+==145593==    by 0x4985EDB: thread_start (clone.S:79)
+==145593==  Address 0x119018 is 0 bytes inside data symbol "accum"
+==145593== 
+==145593== ----------------------------------------------------------------
+==145593== 
+==145593== Possible data race during write of size 8 at 0x119018 by thread #4
+==145593== Locks held: none
+==145593==    at 0x108990: square (in /home/anthonios/Desktop/OS-EX4/Q7/race)
+==145593==    by 0x486F41B: ??? (in /usr/libexec/valgrind/vgpreload_helgrind-arm64-linux.so)
+==145593==    by 0x491D5C7: start_thread (pthread_create.c:442)
+==145593==    by 0x4985EDB: thread_start (clone.S:79)
+==145593== 
+==145593== This conflicts with a previous write of size 8 by thread #3
+==145593== Locks held: none
+==145593==    at 0x108990: square (in /home/anthonios/Desktop/OS-EX4/Q7/race)
+==145593==    by 0x486F41B: ??? (in /usr/libexec/valgrind/vgpreload_helgrind-arm64-linux.so)
+==145593==    by 0x491D5C7: start_thread (pthread_create.c:442)
+==145593==    by 0x4985EDB: thread_start (clone.S:79)
+==145593==  Address 0x119018 is 0 bytes inside data symbol "accum"
+==145593== 
+2870
+==145593== 
+==145593== Use --history-level=approx or =none to gain increased speed, at
+==145593== the cost of reduced accuracy of conflicting-access information
+==145593== For lists of detected and suppressed errors, rerun with: -s
+==145593== ERROR SUMMARY: 36 errors from 2 contexts (suppressed: 494 from 17)

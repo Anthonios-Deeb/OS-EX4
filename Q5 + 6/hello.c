@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
             strcat(string, " ");
         string_so_far = string;
     }
+    
     printf("You entered: %s\n", string_so_far);
     return (0);
 }
